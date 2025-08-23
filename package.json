@@ -7,7 +7,9 @@
   "version": "1.0.0",
   "description": "API gerenciamento para aluguel de imoveis",
   "main": "index.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
