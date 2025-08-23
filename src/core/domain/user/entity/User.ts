@@ -18,7 +18,6 @@ export class User extends Entity<UserProps> {
 
   static create(props: Optional<UserProps, 'createdAt'>, id?: Identity): User {
     this.validateName(props.name);
-    this.validatePassword(props.password);
     return new User(props, id);
   }
 
@@ -43,9 +42,8 @@ export class User extends Entity<UserProps> {
     this.props.name = name;
   }
 
-  updatePassword(password: string): void {
-    User.validatePassword(password);
-    this.props.password = password;
+  updatePasswordHash(passwordHash: string): void {
+    this.props.password = passwordHash;
   }
 
   updateEmail(email: Email): void {
