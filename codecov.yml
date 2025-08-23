@@ -1,0 +1,22 @@
+ignore:
+  - "**/*.spec.ts"
+  - "**/*.test.ts"
+
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+    patch:
+      default:
+        target: auto
+comment:
+  layout: "diff, files"
+  behavior: default
+parsers:
+  gcov:
+    paths:
+      - "src"
+      - "application"
+      - "core"
+      - "shared"
