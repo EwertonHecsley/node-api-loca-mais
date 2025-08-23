@@ -43,6 +43,7 @@ export class User extends Entity<UserProps> {
   }
 
   updatePasswordHash(passwordHash: string): void {
+    User.validatePassword(passwordHash);
     this.props.password = passwordHash;
   }
 
