@@ -5,7 +5,7 @@ import type { BadRequestError } from '@src/shared/errors/custom/BadRequestError'
 import { left, right, type Either } from '@src/shared/utils/Either';
 import { CreateUserFactory } from './factory/CreateUserFactory';
 
-type UserRequest = {
+export type UserRequest = {
   name: string;
   email: string;
   password: string;

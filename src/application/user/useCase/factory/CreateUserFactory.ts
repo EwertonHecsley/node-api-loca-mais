@@ -4,7 +4,7 @@ import { BadRequestError } from '@src/shared/errors/custom/BadRequestError';
 import { InvalidEmailError } from '@src/shared/errors/custom/InvalidEmailError';
 import { left, right, type Either } from '@src/shared/utils/Either';
 
-type CreateUserDto = {
+export type CreateUserDto = {
   name: string;
   email: string;
   password: string;
