@@ -1,12 +1,14 @@
 {
   "dependencies": {
     "22": "^0.0.0",
-    "node": "^24.6.0"
+    "node": "^24.6.0",
+    "uuid": "^11.1.0"
   },
   "name": "loca-mais",
   "version": "1.0.0",
   "description": "API gerenciamento para aluguel de imoveis",
   "main": "index.js",
+  "type": "module",
   "devDependencies": {
     "@eslint/js": "^9.34.0",
     "eslint": "^9.34.0",
@@ -21,7 +23,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --ext .ts src/",
     "lint:fix": "eslint --ext .ts src/ --fix",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "build": "tsc",
+    "start": "node dist/index.js"
   },
   "repository": {
     "type": "git",
