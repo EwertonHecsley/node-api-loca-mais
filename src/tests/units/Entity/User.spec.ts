@@ -80,7 +80,7 @@ describe('User Entity', () => {
     const user = User.create(validProps);
     expect(() => user.updateName('')).toThrow(BadRequestError);
   });
-  
+
   it('should be able to update the user password with a new hash', () => {
     const user = User.create(validProps);
     const newHashedPassword = 'new_hashed_password_123';
