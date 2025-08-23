@@ -2,6 +2,8 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
+    "esModuleInterop": true,
+    "moduleResolution": "bundler",
     "baseUrl": "./",
     "paths": {
       "@src/*": ["src/*"],
@@ -11,9 +13,12 @@
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "nodenext",
+    "module": "es2022",
     "target": "esnext",
-    "types": [],
+    "types": [
+      "jest",
+      "node"
+    ],
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
