@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "22": "^0.0.0",
+    "node": "^24.6.0"
+  },
+  "name": "loca-mais",
+  "version": "1.0.0",
+  "description": "API gerenciamento para aluguel de imoveis",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EwertonHecsley/node-api-loca-mais.git"
+  },
+  "author": "Ewerton Hecsley",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EwertonHecsley/node-api-loca-mais/issues"
+  },
+  "homepage": "https://github.com/EwertonHecsley/node-api-loca-mais#readme"
+}
