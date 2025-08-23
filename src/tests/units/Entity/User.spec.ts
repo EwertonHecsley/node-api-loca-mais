@@ -1,4 +1,3 @@
-// src/tests/units/core/generics/User.spec.ts
 import { User } from '@src/core/domain/user/entity/User';
 import { Email } from '@src/core/domain/user/objectValue/Email';
 import { Identity } from '@src/core/generics/Identity';
@@ -15,10 +14,12 @@ jest.mock('@src/core/generics/Identity', () => ({
 }));
 
 describe('User Entity', () => {
+  const hashedPassword = 'hashed_password_123';
+
   const validProps = {
     name: 'John Doe',
     email: new Email('john.doe@example.com'),
-    password: 'securepassword',
+    password: hashedPassword,
     createdAt: new Date(),
   };
 
@@ -50,9 +51,9 @@ describe('User Entity', () => {
     expect(() => User.create(invalidProps)).toThrow(BadRequestError);
   });
 
-  it('should throw BadRequestError if password is not provided on creation', () => {
+  it('should not throw BadRequestError if password is an empty string on creation (passado pelo useCase)', () => {
     const invalidProps = { ...validProps, password: '' };
-    expect(() => User.create(invalidProps)).toThrow(BadRequestError);
+    expect(() => User.create(invalidProps)).not.toThrow(BadRequestError);
   });
 
   it('should not throw BadRequestError if email is a valid object on creation', () => {
@@ -61,7 +62,6 @@ describe('User Entity', () => {
 
   it('should return the correct property values from getters', () => {
     const user = User.create(validProps);
-
     expect(user.name).toBe(validProps.name);
     expect(user.email.valueOf).toBe(validProps.email.valueOf);
     expect(user.password).toBe(validProps.password);
@@ -80,18 +80,13 @@ describe('User Entity', () => {
     const user = User.create(validProps);
     expect(() => user.updateName('')).toThrow(BadRequestError);
   });
-
-  it('should be able to update the user password', () => {
+  
+  it('should be able to update the user password with a new hash', () => {
     const user = User.create(validProps);
-    const newPassword = 'newSecurePassword';
-    user.updatePassword(newPassword);
+    const newHashedPassword = 'new_hashed_password_123';
+    user.updatePasswordHash(newHashedPassword);
 
-    expect(user.password).toBe(newPassword);
-  });
-
-  it('should throw BadRequestError if the updated password is invalid', () => {
-    const user = User.create(validProps);
-    expect(() => user.updatePassword('')).toThrow(BadRequestError);
+    expect(user.password).toBe(newHashedPassword);
   });
 
   it('should be able to update the user email', () => {
