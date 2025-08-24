@@ -1,9 +1,7 @@
-// src/tests/units/application/user/useCase/factory/CreateUserFactory.spec.ts
-
 import {
   CreateUserFactory,
   type CreateUserDto,
-} from '@src/application/user/useCase/factory/CreateUserFactory';
+} from '@src/core/application/user/useCase/factory/CreateUserFactory';
 import { User } from '@src/core/domain/user/entity/User';
 import { Email } from '@src/core/domain/user/objectValue/Email';
 import { BadRequestError } from '@src/shared/errors/custom/BadRequestError';
