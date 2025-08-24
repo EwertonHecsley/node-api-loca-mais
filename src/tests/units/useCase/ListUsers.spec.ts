@@ -1,4 +1,4 @@
-import { ListAllUsersUseCase } from '@src/application/user/useCase/List';
+import { ListAllUsersUseCase } from '@src/core/application/user/useCase/List';
 import { User } from '@src/core/domain/user/entity/User';
 import type {
   PaginatedResponse,

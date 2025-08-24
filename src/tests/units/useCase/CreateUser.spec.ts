@@ -1,18 +1,14 @@
-// src/tests/units/application/user/useCase/CreateUserUseCase.spec.ts
-
 import {
   CreateUserUseCase,
   type UserRequest,
-} from '@src/application/user/useCase/Create';
-import { CreateUserFactory } from '@src/application/user/useCase/factory/CreateUserFactory';
-import { User } from '@src/core/domain/user/entity/User';
-import { Email } from '@src/core/domain/user/objectValue/Email';
-import { Identity } from '@src/core/generics/Identity';
+} from '@src/core/application/user/useCase/Create';
+import { CreateUserFactory } from '@src/core/application/user/useCase/factory/CreateUserFactory';
+import type { User } from '@src/core/domain/user/entity/User';
+import type { EncryptionGateway } from '@src/core/domain/user/gateway/EncryptionGateway';
+import type { UserGateway } from '@src/core/domain/user/gateway/UserGateway';
 import { BadRequestError } from '@src/shared/errors/custom/BadRequestError';
 import { InvalidEmailError } from '@src/shared/errors/custom/InvalidEmailError';
 import { left, right } from '@src/shared/utils/Either';
-import type { EncryptionGateway } from '@src/core/domain/user/gateway/EncryptionGateway';
-import type { UserGateway } from '@src/core/domain/user/gateway/UserGateway';
 
 const mockEncryptionGateway: jest.Mocked<EncryptionGateway> = {
   hash: jest.fn(),
@@ -22,13 +18,18 @@ const mockEncryptionGateway: jest.Mocked<EncryptionGateway> = {
 const mockUserGateway: jest.Mocked<UserGateway> = {
   create: jest.fn(),
   findByEmail: jest.fn(),
+  findById: jest.fn(),
+  listAll: jest.fn(),
 };
 
-jest.mock('@src/application/user/useCase/factory/CreateUserFactory', () => ({
-  CreateUserFactory: {
-    create: jest.fn(),
-  },
-}));
+jest.mock(
+  '@src/core/application/user/useCase/factory/CreateUserFactory',
+  () => ({
+    CreateUserFactory: {
+      create: jest.fn(),
+    },
+  }),
+);
 
 const { Identity: ActualIdentity } = jest.requireActual(
   '@src/core/generics/Identity',

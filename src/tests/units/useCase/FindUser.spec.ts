@@ -2,7 +2,7 @@ import { User } from '@src/core/domain/user/entity/User';
 import type { UserGateway } from '@src/core/domain/user/gateway/UserGateway';
 import { NotFoundError } from '@src/shared/errors/custom/NotFoundError';
 import { InternalServerError } from '@src/shared/errors/custom/InternalServerError';
-import { FindByIdUserUseCase } from '@src/application/user/useCase/Find';
+import { FindByIdUserUseCase } from '@src/core/application/user/useCase/Find';
 
 const mockUserGateway: jest.Mocked<UserGateway> = {
   create: jest.fn(),
