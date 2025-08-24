@@ -1,7 +1,7 @@
 import type { User } from '@src/core/domain/user/entity/User';
 import type { EncryptionGateway } from '@src/core/domain/user/gateway/EncryptionGateway';
 import type { UserGateway } from '@src/core/domain/user/gateway/UserGateway';
-import type { BadRequestError } from '@src/shared/errors/custom/BadRequestError';
+import { BadRequestError } from '@src/shared/errors/custom/BadRequestError';
 import { left, right, type Either } from '@src/shared/utils/Either';
 import { CreateUserFactory } from './factory/CreateUserFactory';
 
@@ -20,6 +20,9 @@ export class CreateUserUseCase {
   ) {}
 
   async execute(data: UserRequest): Promise<UserResponse> {
+    const existingUser = await this.userGateway.findByEmail(data.email);
+    if (existingUser) return left(new BadRequestError('Email already in use.'));
+
     const userSucessOrError = CreateUserFactory.create(data);
     if (userSucessOrError.isLeft()) {
       return left(userSucessOrError.value);

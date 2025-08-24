@@ -1,10 +1,13 @@
 // src/tests/units/application/user/useCase/CreateUserUseCase.spec.ts
+
 import {
   CreateUserUseCase,
   type UserRequest,
 } from '@src/application/user/useCase/Create';
 import { CreateUserFactory } from '@src/application/user/useCase/factory/CreateUserFactory';
 import { User } from '@src/core/domain/user/entity/User';
+import { Email } from '@src/core/domain/user/objectValue/Email';
+import { Identity } from '@src/core/generics/Identity';
 import { BadRequestError } from '@src/shared/errors/custom/BadRequestError';
 import { InvalidEmailError } from '@src/shared/errors/custom/InvalidEmailError';
 import { left, right } from '@src/shared/utils/Either';
@@ -18,6 +21,7 @@ const mockEncryptionGateway: jest.Mocked<EncryptionGateway> = {
 
 const mockUserGateway: jest.Mocked<UserGateway> = {
   create: jest.fn(),
+  findByEmail: jest.fn(),
 };
 
 jest.mock('@src/application/user/useCase/factory/CreateUserFactory', () => ({
@@ -78,6 +82,7 @@ describe('CreateUserUseCase', () => {
       new ActualIdentity('mock-user-id'),
     );
 
+    mockUserGateway.findByEmail.mockResolvedValue(null);
     (CreateUserFactory.create as jest.Mock).mockReturnValue(right(mockUser));
     mockEncryptionGateway.hash.mockResolvedValue(hashedPassword);
     mockUserGateway.create.mockResolvedValue(mockCreatedUser);
@@ -86,6 +91,9 @@ describe('CreateUserUseCase', () => {
   it('should create a user successfully with valid data', async () => {
     const result = await createUserUseCase.execute(validUserRequest);
 
+    expect(mockUserGateway.findByEmail).toHaveBeenCalledWith(
+      validUserRequest.email,
+    );
     expect(CreateUserFactory.create).toHaveBeenCalledWith(validUserRequest);
     expect(mockEncryptionGateway.hash).toHaveBeenCalledWith(
       validUserRequest.password,
@@ -96,7 +104,25 @@ describe('CreateUserUseCase', () => {
     expect(result.value).toEqual(mockCreatedUser);
   });
 
+  it('should return BadRequestError if email already in use', async () => {
+    mockUserGateway.findByEmail.mockResolvedValue(mockUser);
+
+    const result = await createUserUseCase.execute(validUserRequest);
+
+    expect(mockUserGateway.findByEmail).toHaveBeenCalledWith(
+      validUserRequest.email,
+    );
+    expect(CreateUserFactory.create).not.toHaveBeenCalled();
+    expect(mockEncryptionGateway.hash).not.toHaveBeenCalled();
+    expect(mockUserGateway.create).not.toHaveBeenCalled();
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(BadRequestError);
+    expect(result.value).toEqual(new BadRequestError('Email already in use.'));
+  });
+
   it('should return an error if CreateUserFactory fails with BadRequestError', async () => {
+    mockUserGateway.findByEmail.mockResolvedValue(null);
+
     const factoryError = new BadRequestError('Name is required.');
     (CreateUserFactory.create as jest.Mock).mockReturnValue(left(factoryError));
 
@@ -110,6 +136,8 @@ describe('CreateUserUseCase', () => {
   });
 
   it('should return an error if CreateUserFactory fails with InvalidEmailError', async () => {
+    mockUserGateway.findByEmail.mockResolvedValue(null);
+
     const factoryError = new InvalidEmailError();
     (CreateUserFactory.create as jest.Mock).mockReturnValue(left(factoryError));
 
@@ -123,6 +151,8 @@ describe('CreateUserUseCase', () => {
   });
 
   it('should throw an error if encryptionGateway.hash fails', async () => {
+    mockUserGateway.findByEmail.mockResolvedValue(null);
+
     const encryptionError = new Error('Encryption failed');
     mockEncryptionGateway.hash.mockRejectedValue(encryptionError);
 
@@ -138,6 +168,8 @@ describe('CreateUserUseCase', () => {
   });
 
   it('should throw an error if userGateway.create fails', async () => {
+    mockUserGateway.findByEmail.mockResolvedValue(null);
+
     const gatewayError = new Error('Database error');
     mockUserGateway.create.mockRejectedValue(gatewayError);
 
