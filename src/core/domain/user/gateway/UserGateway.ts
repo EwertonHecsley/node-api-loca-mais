@@ -16,4 +16,5 @@ export abstract class UserGateway {
   abstract create(entity: User): Promise<User>;
   abstract findByEmail(email: string): Promise<User | null>;
   abstract listAll(params: FindAllParams): Promise<PaginatedResponse<User>>;
+  abstract findById(id: string): Promise<User | null>;
 }
