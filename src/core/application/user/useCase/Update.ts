@@ -19,38 +19,40 @@ export class UpdateUserUseCase {
   ) {}
 
   async execute(data: UpdateUserDto): Promise<ResponseUser> {
-    const validatedDtoOrError = UpdateUserFactory.create(data);
-    if (validatedDtoOrError.isLeft()) {
-      return left(validatedDtoOrError.value);
-    }
-
-    const { id } = validatedDtoOrError.value;
-
-    const user = await this.userGateway.findById(id);
-
-    if (!user) {
-      return left(new BadRequestError('User not found'));
-    }
-
-    if (data.email && data.email !== user.email.valueOf) {
-      const emailExist = await this.userGateway.findByEmail(data.email);
-      if (emailExist) {
-        return left(new BadRequestError('Email already in use'));
-      }
-      const newEmail = new Email(data.email);
-      user.updateEmail(newEmail);
-    }
-
-    if (data.name) {
-      user.updateName(data.name);
-    }
-
-    if (data.password) {
-      const newHashPassword = await this.encryptionGateway.hash(data.password);
-      user.updatePasswordHash(newHashPassword);
-    }
-
     try {
+      const validatedDtoOrError = UpdateUserFactory.create(data);
+      if (validatedDtoOrError.isLeft()) {
+        return left(validatedDtoOrError.value);
+      }
+
+      const { id } = validatedDtoOrError.value;
+
+      const user = await this.userGateway.findById(id);
+
+      if (!user) {
+        return left(new BadRequestError('User not found'));
+      }
+
+      if (data.email && data.email !== user.email.valueOf) {
+        const emailExist = await this.userGateway.findByEmail(data.email);
+        if (emailExist) {
+          return left(new BadRequestError('Email already in use'));
+        }
+        const newEmail = new Email(data.email);
+        user.updateEmail(newEmail);
+      }
+
+      if (data.name) {
+        user.updateName(data.name);
+      }
+
+      if (data.password) {
+        const newHashPassword = await this.encryptionGateway.hash(
+          data.password,
+        );
+        user.updatePasswordHash(newHashPassword);
+      }
+
       await this.userGateway.save(user);
       return right(user);
     } catch (error) {
