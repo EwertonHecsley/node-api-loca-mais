@@ -18,4 +18,5 @@ export abstract class UserGateway {
   abstract listAll(params: FindAllParams): Promise<PaginatedResponse<User>>;
   abstract findById(id: string): Promise<User | null>;
   abstract delete(id: string): Promise<void>;
+  abstract save(entity: User): Promise<void>;
 }
